@@ -42,10 +42,10 @@ include <../bitmap/bitmap.scad> // Bitmap Fonts http://www.thingiverse.com/thing
 // change these if needed
 spring_inner_diameter = 9; // possible spring to use http://www.mcmaster.com/#9657k36/=dg66jt
 tolerance = 0.3;
-part = "assembly";
+part = "all_plates";
 
 // don't change these
-// $fn = 20;
+// $fn = 30;
 spring_inner_radius = spring_inner_diameter/2;
 
 white = [255/255, 250/255, 240/255];
@@ -54,15 +54,7 @@ red = [200/255, 0/255, 0/255];
 yellow = [255/255, 255/255, 102/255];
 orange = [255/255, 140/255, 0/255];
 
-// stupid openscad recursion limitations...
-// TODO: plates
-if (part == "plate1") {
-  print_plate("1");
-} else if (part == "plate2") {
-  print_plate("2");
-} else {
-  print_part(part);
-}
+print_part(part);
 
 module print_part(part) {
   echo(str("Printing part: ", part));
@@ -111,9 +103,126 @@ module print_part(part) {
     key();
   } else if (part == "head_cavity_negative") {
     head_cavity_negative();
+  } else if (part == "plate1") {
+    plate1();
+  } else if (part == "plate2") {
+    plate2();
+  } else if (part == "plate3") {
+    plate3();
+  } else if (part == "plate3") {
+    plate3();
+  } else if (part == "plate4") {
+    plate4();
+  } else if (part == "plate5") {
+    plate5();
+  } else if (part == "plate6") {
+    plate6();
+  } else if (part == "all_plates") {
+    all_plates();
   } else {
     echo(str("I'm sorry Dave, I'm afraid I can't print: ", part));
   }
+}
+
+module platform_guide() {
+  %translate([0, 0, -1]) cube(size = [100, 100, 1], center = true);
+}
+
+module plate1() {
+  platform_guide();
+  
+  translate([0, 0, 0]) base();
+}
+
+module plate2() {
+  platform_guide();
+  
+  translate([0, 0, 0]) head();
+  translate([-32, -32, 0]) rotate([0, 0, 45]) leg();
+  mirror() translate([-32, -32, 0]) rotate([0, 0, 45]) leg();
+}
+
+module plate3() {
+  platform_guide();
+  
+  translate([0, 0, 0]) body();
+
+  translate([-22, 30, 0]) rotate([0, 0, -90]) arm_upper();
+  translate([22, 30, 0]) rotate([0, 0, 90]) arm_upper();
+
+  translate([-35, 0, 0]) arm_lower();
+  translate([35, 0, 0]) arm_lower();
+
+  translate([-25, -30, 0]) rotate([0, 0, 90]) hand();
+  translate([25, -30, 0]) rotate([0, 0, -90]) hand();
+}
+
+module plate4() {
+  platform_guide();
+
+  translate([0, 29, 0]) antenna_top();
+
+  translate([0, 2, 0]) feet();
+
+  translate([-35, 29, 0]) pintack_large();
+  translate([35, 29, 0]) pintack_large();
+
+  translate([-35, 13, 0]) pintack_large();
+  translate([35, 13, 0]) pintack_large();
+
+  translate([-35, -3, 0]) pintack_large();
+  translate([35, -3, 0]) pintack_large();
+
+  translate([-35, -19, 0]) pintack_small();
+  translate([35, -19, 0]) pintack_small();
+  
+
+  translate([-8, -22, 0]) rotate([0, 0, 90]) antenna_side_bottom();
+  translate([8, -22, 0]) rotate([0, 0, -90]) antenna_side_bottom();
+  
+  translate([-20, -35, 0]) rotate([0, 0, -90]) antenna_side_top();
+  translate([20, -35, 0]) rotate([0, 0, 90]) antenna_side_top();
+}
+
+module plate5() {
+  platform_guide();
+  
+  translate([0, 0, 0]) logo();
+  
+  translate([0, 24, 0]) dial();
+
+  translate([-25, 0, 0]) eye();
+  translate([25, 0, 0]) eye();
+
+  translate([0, -20, 0]) mouth();
+}
+
+module plate6() {
+  platform_guide();
+  
+  translate([0, -11, 0]) key();
+  translate([-30, 4-11, 0]) pinpeg_large();
+  translate([-20, 4-11, 0]) pinpeg_large();
+  translate([-10, 4-11, 0]) pinpeg_large();
+
+  translate([30, 4-11, 0]) pinpeg_large();
+  translate([20, 4-11, 0]) pinpeg_large();
+  translate([10, 4-11, 0]) pinpeg_large();
+
+  translate([0, -13-11, 0]) rotate([0, 0, 90]) pinpeg_large();
+
+  translate([-16, -15-11, 0]) pinpeg_small();
+  translate([16, -15-11, 0]) pinpeg_small();
+}
+
+module all_plates() {
+  // goddamnit openscad gimme a bigger tree
+  render() translate([-100, 50, 0]) plate1();
+  render() translate([0, 50, 0]) plate2();
+  render() translate([100, 50, 0]) plate3();
+  render() translate([-100, -50, 0]) plate4();
+  render() translate([0, -50, 0]) plate5();
+  render() translate([100, -50, 0]) plate6();  
 }
 
 // damnit, have to render a lot of it or else openscad's opencsg rendering fails :(
